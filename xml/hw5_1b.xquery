@@ -1,0 +1,1 @@
+/customers/customerinfo[addr/city = "Toronto"][assistant]/name/text()

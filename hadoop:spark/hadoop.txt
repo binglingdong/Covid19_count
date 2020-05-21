@@ -1,0 +1,35 @@
+你要先把东西移到dfs的directory才能用。自动加了user/root。
+docker run -it -p 8088:8088 -p 50070:50070 -p 8042:8042 sequenceiq/hadoop-docker:2.7.1 /etc/bootstrap.sh -bash
+
+sudo docker cp ./file.txt 588fb48cd68d:/usr/local/hadoop/file.txt
+cd $HADOOP_PREFIX
+--------------------------
+javac -cp `hadoop classpath` Covid19_1.java -d build -Xlint
+jar -cvf Covid19_1.jar -C build/ .
+
+javac -cp "spark-2.4.5-bin-hadoop2.7/jars/*" SparkCovid19_1.java -d build -Xlint
+jar -cvf SparkCovid19_1.jar -C build/ .
+
+-------------------------
+hadoop jar Covid19_1.jar Covid19_1 /cse532/input/covid19_full_data.csv true /cse532/output/
+
+hadoop jar Covid19_2.jar Covid19_2 /cse532/input/covid19_full_data.csv 2020-01-01 2020-03-31 /cse532/output/
+
+hadoop jar Covid19_3.jar Covid19_3 /cse532/input/covid19_full_data.csv hdfs://ip-172-31-93-249.ec2.internal:8020/cse532/input/populations.csv /cse532/output/
+
+
+-------------------------
+
+spark-submit --class SparkCovid19_1 SparkCovid19_1.jar hdfs://ip-172-31-35-46.ec2.internal:8020/cse532/input/covid19_full_data.csv 2020-01-01 2020-03-31 hdfs://ip-172-31-35-46.ec2.internal:8020/cse532/output/
+
+spark-submit --class SparkCovid19_2 SparkCovid19_2.jar hdfs://ip-172-31-35-46.ec2.internal:8020/cse532/input/covid19_full_data.csv hdfs://ip-172-31-35-46.ec2.internal:8020/cse532/input/populations.csv hdfs://ip-172-31-35-46.ec2.internal:8020/cse532/output/
+
+-------------------------
+hdfs dfs -cat /cse532/output/*
+hdfs dfs -rm -r /cse532/output
+
+
+
+aws s3 cp s3://cse532input/populations.csv populations.csv
+hdfs dfs -put populations.csv /cse532/input/populations.csv
+hdfs dfs -ls /cse532/input
